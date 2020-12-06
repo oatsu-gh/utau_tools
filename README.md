@@ -4,7 +4,7 @@ UTAUのちょっとしたツール
 
 ## 開発環境
 
-- Windows 10
+- Windows 10 (version 2004)
 - Python 3.8 or Python 3.9
 - [utaupy](https://github.com/oatsu-gh/utaupy) 開発版
 
