@@ -1,5 +1,5 @@
 
-# Nuance Keeping Frq Maker
+# Nuance Keeping FRQ Maker
 UTAU音源の周波数表のうち、oto.ini における子音部分のニュアンスを残す。
 
 ## 目標
