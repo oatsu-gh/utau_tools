@@ -1,5 +1,7 @@
+*.csv
 *.exe
 *.spec
+*.wav
 build
 dist
 __pycache__
