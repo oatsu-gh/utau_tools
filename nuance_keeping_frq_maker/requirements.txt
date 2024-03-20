@@ -1,6 +1,4 @@
-PyUtauCli
 pandas
-pyworld
 scipy
 tqdm
 utaupy

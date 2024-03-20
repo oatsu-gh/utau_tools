@@ -4,21 +4,24 @@
 UTAU音源の周波数表のうち、oto.ini における子音部分のニュアンスを残す。
 """
 
-import copy
 import math
 import shutil
-import struct
+import sys
 from datetime import datetime
 from glob import glob
 from os import makedirs
-from os.path import basename, isdir, join
-from pprint import pprint
+from os.path import basename, dirname, isdir, isfile, join
 
 import numpy as np
 import utaupy
 from pandas import DataFrame
-from PyUtauCli.voicebank.frq import Frq
 from tqdm import tqdm
+
+if isfile(join(dirname(__file__), 'frq.py')):
+    sys.path.append(dirname(__file__))
+    from frq import Frq
+else:
+    from PyUtauCli.voicebank.frq import Frq
 
 FLAGNAME = '_should_be_flatten_flag'
 INTERP_METHOD = 'akima'
@@ -43,7 +46,8 @@ def frqobj_to_dataframe(frq: Frq) -> DataFrame:
     """PyUtauCli.voicebank.frq.Frq をpandas.DataFrame に変換する"""
     df = DataFrame()
     df['t'] = frq.t
-    df['f0'] = frq.f0
+    # 何らかの周波数生成ソフトだとベースラインが0Hzではなくて55Hzなので、それを除外するようにする。
+    df['f0'] = [f0 if f0 > 55 else 0 for f0 in frq.f0]
     df['amp'] = frq.amp
     df['f0_avg'] = frq.f0_avg
     df['_log_f0'] = [math.log10(max(1,v)) for v in df['f0']]
@@ -144,7 +148,7 @@ def main():
     print('( -_-) < 周波数表ファイル(frq) を出力します。')
     for path_frq in tqdm(frq_files):
         df = d_frq_dataframes[basename(path_frq)]
-        # df.to_csv(path_frq.replace('.frq', '.csv'), encoding='cp932', index_label='#')
+        df.to_csv(path_frq.replace('.frq', '.csv'), encoding='cp932', index_label='#')
         temp_frq: Frq = d_frq_objects[basename(path_frq)]
         temp_frq.f0 = df['_new_f0'].to_numpy()
         temp_frq.save()
